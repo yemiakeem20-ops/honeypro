@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#172b1d" />
+  <meta name="description" content="HoneyPro premium unfiltered Nigerian honey. 100% pure, natural and unprocessed. Order online and pay on delivery." />
+  <title>HoneyPro by Hakme Farms | Pure Nigerian Honey</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" />
+  <script src="/config.js"></script>
+  <script>
+    (function () {
+      const id = window.HONEYPRO_CONFIG && window.HONEYPRO_CONFIG.metaPixelId;
+      if (!id || id === "YOUR_META_PIXEL_ID") return;
+      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+      (window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', id); fbq('track', 'PageView');
+    })();
+  </script>
+</head>
+<body>
+  <div class="announcement">FREE DELIVERY · PAY ON DELIVERY · ORDER WITH CONFIDENCE</div>
+  <header class="site-header">
+    <a class="brand" href="#"><span class="brand-mark">H</span><span>HoneyPro<small>BY HAKME FARMS</small></span></a>
+    <a class="header-cta" href="#order">Order Now <span>→</span></a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">FLOWER TO TABLE</p>
+        <h1>Real honey.<br><em>Nothing added.</em></h1>
+        <p class="hero-lead">Bring home the rich taste and natural aroma of premium Nigerian honey, harvested from the combs of African honey bees.</p>
+        <ul class="trust-list">
+          <li>✓ 100% pure and undiluted</li>
+          <li>✓ Unfiltered and unprocessed</li>
+          <li>✓ No additives or preservatives</li>
+        </ul>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#order">Order Your 5L Keg</a>
+          <span class="micro-trust">Inspect on delivery before you pay</span>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="image-halo"></div>
+        <img src="/honeypro-keg.jpg" alt="HoneyPro premium unfiltered honey in a 5 litre keg" />
+        <div class="floating-note"><strong>5 LITRES</strong><span>Family-size value</span></div>
+      </div>
+    </section>
+
+    <section class="proof-strip" aria-label="Product highlights">
+      <div><strong>100%</strong><span>Pure honey</span></div>
+      <div><strong>5L</strong><span>Family-size keg</span></div>
+      <div><strong>₦0</strong><span>Delivery fee*</span></div>
+      <div><strong>COD</strong><span>Pay on delivery</span></div>
+    </section>
+
+    <section class="story section">
+      <div class="section-kicker">WHY HONEYPRO?</div>
+      <h2>Nature’s sweetness,<br>kept beautifully simple.</h2>
+      <p>HoneyPro is premium polyfloral honey sourced from natural honeycombs. We keep it simple: real honey, carefully handled and packaged for your home.</p>
+      <div class="feature-grid">
+        <article><span class="feature-icon">✦</span><h3>Pure & undiluted</h3><p>No added syrup, artificial sweeteners or unnecessary ingredients.</p></article>
+        <article><span class="feature-icon">❋</span><h3>Naturally rich taste</h3><p>Enjoy its distinctive aroma and full-bodied flavour in every spoonful.</p></article>
+        <article><span class="feature-icon">⌂</span><h3>Made for everyday use</h3><p>Enjoy with pap, tea, oats, meals, drinks and homemade desserts.</p></article>
+      </div>
+    </section>
+
+    <section class="offer-band">
+      <div><span class="section-kicker">A LITTLE NATURE FOR YOUR HOME</span><h2>Make the switch to real honey.</h2><p>Order your 5-litre HoneyPro keg today. Delivery is free in eligible locations.</p></div>
+      <a class="button button-light" href="#order">Get HoneyPro Now</a>
+    </section>
+
+    <section class="order-section section" id="order">
+      <div class="order-intro">
+        <div class="section-kicker">READY TO ORDER?</div>
+        <h2>Get HoneyPro<br>delivered to you.</h2>
+        <p>Enter your details carefully so our delivery team can reach you. You pay when your order arrives.</p>
+        <div class="promise-card"><span>🛡️</span><div><strong>Buy with confidence</strong><p>If you inspect the product at delivery and are not satisfied that it is original HoneyPro, you can refuse the order without paying.</p></div></div>
+      </div>
+      <form id="orderForm" class="order-form">
+        <div class="form-heading"><h3>Place your order</h3><span>5L HoneyPro keg</span></div>
+        <div class="price-row"><div><small>Price per keg</small><strong id="unitPrice">₦68,500</strong></div><span class="delivery-pill">FREE DELIVERY*</span></div>
+        <label>Full name<input name="fullName" autocomplete="name" placeholder="Enter your full name" required minlength="2" /></label>
+        <div class="two-fields">
+          <label>Phone number<input name="phone" type="tel" autocomplete="tel" placeholder="080..." required pattern="[0-9+() -]{10,16}" /></label>
+          <label>Quantity<select name="quantity" id="quantity"><option value="1">1 keg</option><option value="2">2 kegs</option><option value="3">3 kegs</option><option value="4">4 kegs</option><option value="5">5 kegs</option></select></label>
+        </div>
+        <label>Email address <span class="optional">(optional)</span><input name="email" type="email" autocomplete="email" placeholder="you@example.com" /></label>
+        <div class="two-fields">
+          <label>State<input name="state" autocomplete="address-level1" placeholder="e.g. Lagos" required /></label>
+          <label>City / LGA<input name="city" autocomplete="address-level2" placeholder="e.g. Ikeja" required /></label>
+        </div>
+        <label>Full delivery address<textarea name="address" autocomplete="street-address" rows="3" placeholder="House number, street, landmark..." required></textarea></label>
+        <label>Delivery note <span class="optional">(optional)</span><input name="deliveryNote" placeholder="Best time to call, landmark, etc." /></label>
+        <div class="total-row"><span>Total to pay on delivery</span><strong id="totalPrice">₦68,500</strong></div>
+        <label class="consent"><input type="checkbox" name="consent" required /><span>I confirm that my details are correct and agree to be contacted about this order.</span></label>
+        <button class="button button-primary submit-button" type="submit" id="submitButton">Place My Order — Pay on Delivery</button>
+        <p class="form-footnote">Please order only if you are available to receive your package. Our team may call to confirm your order.</p>
+        <div id="formMessage" class="form-message" role="status" aria-live="polite"></div>
+      </form>
+    </section>
+
+    <section class="faq-section section">
+      <div class="section-kicker">GOOD TO KNOW</div><h2>Frequently asked questions</h2>
+      <details><summary>Do I pay before delivery?</summary><p>No. This is a payment-on-delivery order. You pay when the product arrives.</p></details>
+      <details><summary>What if I am not satisfied that it is original?</summary><p>Inspect the product when it arrives. If you are not satisfied that it is original HoneyPro, you may refuse the delivery without paying.</p></details>
+      <details><summary>How much is delivery?</summary><p>Delivery is free in eligible locations. Our team will confirm delivery arrangements when they contact you.</p></details>
+      <details><summary>How should I use HoneyPro?</summary><p>Use it as a natural sweetener in foods and drinks, or enjoy it on its own. Honey is still a source of sugar, so people monitoring blood glucose should use it sparingly and seek advice from their healthcare professional.</p></details>
+    </section>
+  </main>
+
+  <footer><a class="brand footer-brand" href="#"><span class="brand-mark">H</span><span>HoneyPro<small>BY HAKME FARMS</small></span></a><p>Flower to Table. Proudly Nigerian.</p><small>© <span id="year"></span> HoneyPro by Hakme Farms. All rights reserved.</small></footer>
+
+  <div class="sticky-mobile-cta"><span><small>5L HoneyPro</small><strong id="stickyPrice">₦68,500</strong></span><a href="#order" class="button button-primary">Order Now</a></div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
