@@ -90,6 +90,7 @@ exports.handler = async (event) => {
       <p><b>Order:</b> ${data.id}</p>
       <p><b>Customer:</b> ${escapeHtml(order.full_name)}</p>
       <p><b>Phone:</b> ${escapeHtml(order.phone)}</p>
+      <p><b>WhatsApp:</b> ${escapeHtml(order.whatsapp_number || "Not provided")}</p>
       <p><b>Address:</b> ${escapeHtml(order.address)}, ${escapeHtml(order.city)}, ${escapeHtml(order.state)}</p>
       <p><b>Quantity:</b> ${quantity}</p>
       <p><b>Total:</b> ₦${order.total_amount.toLocaleString("en-NG")}</p>
