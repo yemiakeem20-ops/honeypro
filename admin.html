@@ -2,4 +2,12 @@
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#172b1d"><title>HoneyPro Orders Dashboard</title><link rel="stylesheet" href="/admin.css"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="/admin-config.js"></script></head>
 <body><header><a href="/" class="brand">HoneyPro <small>ORDER DASHBOARD</small></a><button id="logout" hidden>Log out</button></header>
 <main><section id="loginPanel" class="panel login"><h1>Admin sign in</h1><p>Sign in with your authorised HoneyPro admin account.</p><form id="loginForm"><label>Email<input type="email" id="email" required autocomplete="username"></label><label>Password<input type="password" id="password" required autocomplete="current-password"></label><button>Sign in</button><p id="loginMessage" class="message"></p></form></section>
-<section id="dashboard" hidden><div class="dash-head"><div><p class="eyebrow">HONEYPRO · SALES</p><h1>Customer orders</h1><p class="muted">New orders are stored here for delivery follow-up.</p></div><button id="refresh">Refresh orders</button></div><div class="stats"><div><small>Total orders</small><strong id="count">0</strong></div><div><small>New orders</small><strong id="newCount">0</strong></div><div><small>Order value</small><strong id="value">₦0</strong></div></div><div class="table-wrap"><table><thead><tr><th>Order date</th><th>Customer</th><th>Phone</th><th>Delivery address</th><th>Qty</th><th>Total</th><th>Status</th></tr></thead><tbody id="orders"><tr><td colspan="7">Loading orders…</td></tr></tbody></table></div><p id="dashMessage" class="message"></p></section></main><script src="/admin.js"></script></body></html>
+<section id="dashboard" hidden><div class="dash-head"><div><p class="eyebrow">HONEYPRO · SALES</p><h1>Customer orders</h1><p class="muted">New orders are stored here for delivery follow-up.</p></div><button id="refresh">Refresh orders</button></div><div class="stats"><div><small>Total orders</small><strong id="count">0</strong></div><div><small>New orders</small><strong id="newCount">0</strong></div><div><small>Order value</small><strong id="value">₦0</strong></div></div><div class="table-wrap"><table><thead><tr><th>Order date</th>
+<th>Customer</th>
+<th>Phone</th>
+<th>WhatsApp</th>
+<th>Email</th>
+<th>Delivery address</th>
+<th>Qty</th>
+<th>Total</th>
+<th>Status</th></tr></thead><tbody id="orders"><tr><td colspan="7">Loading orders…</td></tr></tbody></table></div><p id="dashMessage" class="message"></p></section></main><script src="/admin.js"></script></body></html>
