@@ -92,6 +92,15 @@
           <label>Phone number<input name="phone" type="tel" autocomplete="tel" placeholder="080..." required pattern="[0-9+() -]{10,16}" /></label>
           <label>Quantity<select name="quantity" id="quantity"><option value="1">1 keg</option><option value="2">2 kegs</option><option value="3">3 kegs</option><option value="4">4 kegs</option><option value="5">5 kegs</option></select></label>
         </div>
+        <label>WhatsApp number <span class="optional">(optional)</span>
+  <input
+    name="whatsappNumber"
+    type="tel"
+    autocomplete="tel"
+    placeholder="e.g. 08012345678"
+    pattern="[0-9+() -]{10,16}"
+  />
+</label>
         <label>Email address <span class="optional">(optional)</span><input name="email" type="email" autocomplete="email" placeholder="you@example.com" /></label>
         <div class="two-fields">
           <label>State<input name="state" autocomplete="address-level1" placeholder="e.g. Lagos" required /></label>
