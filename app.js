@@ -24,6 +24,7 @@ form.addEventListener("submit", async (event) => {
   const order = {
     full_name: data.fullName.trim(),
     phone: data.phone.trim(),
+    whatsapp_number: data.whatsappNumber.trim() || null,
     email: data.email.trim() || null,
     state: data.state.trim(),
     city: data.city.trim(),
