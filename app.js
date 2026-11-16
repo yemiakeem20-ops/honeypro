@@ -46,8 +46,20 @@ form.addEventListener("submit", async (event) => {
     const result = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(result.error || "We couldn't submit your order. Please try again.");
     if (typeof window.fbq === "function") {
-      window.fbq("track", "Lead", {content_name:"HoneyPro 5L Honey",currency:"NGN",value:order.total_amount});
-    }
+  window.fbq("track", "Lead", {
+    content_name: "HoneyPro 5L Honey",
+    currency: "NGN",
+    value: order.total_amount
+  });
+}
+
+if (window.ttq && typeof window.ttq.track === "function") {
+  window.ttq.track("SubmitForm", {
+    content_name: "HoneyPro 5L Honey",
+    currency: "NGN",
+    value: order.total_amount
+  });
+}
     form.reset(); updatePrice();
     msg.className = "form-message success";
     msg.textContent = "Thank you! Your order has been received. Our team will call you to confirm delivery. Please keep your phone available.";
