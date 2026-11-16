@@ -58,6 +58,7 @@ exports.handler = async (event) => {
   const order = {
     full_name: input.full_name.trim().slice(0, 120),
     phone: input.phone.trim().slice(0, 30),
+    whatsapp_number: typeof input.whatsapp_number === "string" ? input.whatsapp_number.trim().slice(0, 30) || null : null,
     email: typeof input.email === "string" ? input.email.trim().slice(0, 160) : null,
     state: input.state.trim().slice(0, 80),
     city: input.city.trim().slice(0, 100),
