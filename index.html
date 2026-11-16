@@ -12,9 +12,11 @@
   <link rel="stylesheet" href="/styles.css" />
   <script src="/config.js"></script>
   <script>
+
+<script>
 (function () {
-  const pixelId = window.HONEYPRO_CONFIG && window.HONEYPRO_CONFIG.tiktokPixelId;
-  if (!pixelId || pixelId === "YOUR_TIKTOK_PIXEL_ID") return;
+  const pixelId = window.HONEYPRO_CONFIG?.tiktokPixelId;
+  if (!pixelId) return;
 
   !function (w, d, t) {
     w.TiktokAnalyticsObject = t;
@@ -53,11 +55,13 @@
       var a = d.getElementsByTagName("script")[0];
       a.parentNode.insertBefore(o, a);
     };
+
     ttq.load(pixelId);
     ttq.page();
   }(window, document, "ttq");
 })();
 </script>
+
     (function () {
       const id = window.HONEYPRO_CONFIG && window.HONEYPRO_CONFIG.metaPixelId;
       if (!id || id === "YOUR_META_PIXEL_ID") return;
