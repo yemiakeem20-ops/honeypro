@@ -38,10 +38,19 @@ async function loadOrders(){
  document.getElementById("newCount").textContent=rows.filter(x=>x.status==="new").length;
  document.getElementById("value").textContent=money(rows.reduce((s,x)=>s+Number(x.total_amount||0),0));
  const tbody=document.getElementById("orders");tbody.replaceChildren();
- if(!rows.length){tbody.innerHTML='<tr><td colspan="7">No orders yet.</td></tr>';}
+if(!rows.length){tbody.innerHTML='<tr><td colspan="9">No orders yet.</td></tr>';}
  rows.forEach(o=>{
   const tr=document.createElement("tr");
-  const cells=[new Date(o.created_at).toLocaleString("en-NG"),o.full_name,o.phone,`${o.address}, ${o.city}, ${o.state}`,o.quantity,money(o.total_amount)];
+const cells=[
+  new Date(o.created_at).toLocaleString("en-NG"),
+  o.full_name,
+  o.phone,
+  o.whatsapp_number || "Not provided",
+  o.email || "Not provided",
+  `${o.address}, ${o.city}, ${o.state}`,
+  o.quantity,
+  money(o.total_amount)
+];
   cells.forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td);});
   const status=document.createElement("td");status.innerHTML=`<span class="status"></span>`;status.firstChild.textContent=o.status||"new";tr.appendChild(status);tbody.appendChild(tr);
  });
