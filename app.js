@@ -40,7 +40,7 @@ form.addEventListener("submit", async (event) => {
   };
   button.disabled = true; button.textContent = "Submitting your order…";
   try {
-    const response = await fetch("/.netlify/functions/create-order", {
+    const response = await fetch("/api/create-order", {
       method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(order)
     });
     const result = await response.json().catch(() => ({}));
