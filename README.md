@@ -62,3 +62,39 @@ The admin dashboard includes browser desktop notifications. Sign in on the lapto
 
 ## Privacy and customer data
 Customer contact and address details are personal information. Restrict dashboard access, do not share Supabase service credentials, and use the information only for order fulfilment and customer service. Add a privacy policy and retention process appropriate to your business and applicable Nigerian data-protection requirements.
+
+
+## Deploy the independent Cloudflare Pages copy
+
+This branch, `cloudflare-duplicate`, is prepared for Cloudflare Pages. It keeps the existing Netlify configuration and Netlify function in the repository, but the storefront in this branch sends orders to the Cloudflare Pages Function at `/api/create-order`.
+
+1. In Cloudflare, open **Workers & Pages → Create → Pages → Connect to Git**.
+2. Select the GitHub repository `yemiakeem20-ops/honeypro`.
+3. Choose the `cloudflare-duplicate` branch (do not select `main`).
+4. Use the following build settings:
+   - Framework preset: **None**
+   - Build command: `npm install`
+   - Build output directory: `.`
+   - Root directory: `/`
+5. Add these as **Cloudflare Pages environment variables** for Production (and Preview if you want preview deployments):
+   - `SUPABASE_URL` = your existing Supabase project URL
+   - `SUPABASE_SECRET_KEY` = your Supabase secret key (secret; never put it in a frontend file or GitHub)
+   - `HONEYPRO_UNIT_PRICE_NAIRA` = `68500` (change only if the current approved selling price differs)
+   - `RESEND_API_KEY` = your Resend API key
+   - `ORDER_NOTIFICATION_EMAIL` = the email address for order alerts
+   - `FROM_EMAIL` = a sender verified in Resend
+6. Deploy. Cloudflare will install the root dependency in `package.json` and deploy the `functions/api/create-order.js` Pages Function.
+7. Test the duplicate with a test order and confirm that it appears in the existing Supabase dashboard and that the email arrives.
+
+The Netlify site continues to use `/.netlify/functions/create-order` on the original `main` branch. Do not change its Netlify site settings or deploy the Cloudflare branch to the existing Netlify site.
+
+### Database note
+
+The order function stores the optional WhatsApp number in `honeypro_orders.whatsapp_number`. If that column is not already present in your existing Supabase table, run this once in Supabase SQL Editor:
+
+```sql
+alter table public.honeypro_orders
+add column if not exists whatsapp_number text;
+```
+
+The Cloudflare function uses the same Supabase project as the Netlify site, so both sites will share the same order records and admin dashboard. Keep the Supabase secret key only in Cloudflare's encrypted environment-variable settings.
