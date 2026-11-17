@@ -81,7 +81,7 @@ export async function onRequest(context) {
 
   let data;
   try {
-    const supabaseUrl = env.SUPABASE_URL.replace(/\\/$/, "");
+    const supabaseUrl = env.SUPABASE_URL.replace(/\/$/, "");
     const insertResponse = await fetch(`${supabaseUrl}/rest/v1/honeypro_orders?select=id,created_at`, {
       method: "POST",
       headers: {
