@@ -6,6 +6,7 @@ create table if not exists public.honeypro_orders (
   created_at timestamptz not null default now(),
   full_name text not null,
   phone text not null,
+  whatsapp_number text,
   email text,
   state text not null,
   city text not null,
