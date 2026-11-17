@@ -1,5 +1,3 @@
-import { createClient } from "@supabase/supabase-js";
-
 const json = (body, status = 200) => new Response(JSON.stringify(body), {
   status,
   headers: {
@@ -81,18 +79,32 @@ export async function onRequest(context) {
     status: "new"
   };
 
-  const supabase = createClient(env.SUPABASE_URL, supabaseSecret, {
-    auth: { persistSession: false, autoRefreshToken: false }
-  });
+  let data;
+  try {
+    const supabaseUrl = env.SUPABASE_URL.replace(/\\/$/, "");
+    const insertResponse = await fetch(`${supabaseUrl}/rest/v1/honeypro_orders?select=id,created_at`, {
+      method: "POST",
+      headers: {
+        "apikey": supabaseSecret,
+        "Authorization": `Bearer ${supabaseSecret}`,
+        "Content-Type": "application/json",
+        "Prefer": "return=representation"
+      },
+      body: JSON.stringify(order)
+    });
 
-  const { data, error } = await supabase
-    .from("honeypro_orders")
-    .insert(order)
-    .select("id,created_at")
-    .single();
-
-  if (error) {
-    console.error("Supabase order insert failed:", error.message);
+    const responseBody = await insertResponse.json().catch(() => null);
+    if (!insertResponse.ok) {
+      console.error("Supabase order insert failed:", responseBody);
+      return json({ error: "We could not save your order. Please try again." }, 500);
+    }
+    data = Array.isArray(responseBody) ? responseBody[0] : responseBody;
+    if (!data || !data.id) {
+      console.error("Supabase returned no order record:", responseBody);
+      return json({ error: "We could not confirm your order. Please contact us." }, 500);
+    }
+  } catch (error) {
+    console.error("Supabase order request failed:", error.message);
     return json({ error: "We could not save your order. Please try again." }, 500);
   }
 
