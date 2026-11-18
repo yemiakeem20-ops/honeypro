@@ -14,14 +14,62 @@ document.getElementById("loginForm").addEventListener("submit",async e=>{
  loginMessage.textContent="Signing in…";
  const {error}=await client.auth.signInWithPassword({email:document.getElementById("email").value,password:document.getElementById("password").value});
  if(error){loginMessage.textContent=error.message;return;}
- if("Notification" in window && Notification.permission==="default"){
-   try { await Notification.requestPermission(); } catch (_) {}
- }
  await showDashboard();
 });
 logout.addEventListener("click",async()=>{if(notificationTimer)clearInterval(notificationTimer);await client.auth.signOut();dashboard.hidden=true;loginPanel.hidden=false;logout.hidden=true;});
 document.getElementById("refresh").addEventListener("click",()=>loadOrders());
 document.getElementById("exportOrders").addEventListener("click",exportOrdersCsv);
+document.getElementById("enablePushNotifications").addEventListener("click",enablePushNotifications);
+
+function urlBase64ToUint8Array(value){
+ const padding="=".repeat((4-value.length%4)%4);
+ const base64=(value+padding).replace(/-/g,"+").replace(/_/g,"/");
+ const raw=atob(base64);
+ return Uint8Array.from(raw,c=>c.charCodeAt(0));
+}
+async function enablePushNotifications(){
+ const button=document.getElementById("enablePushNotifications");
+ const cfg=window.HONEYPRO_ADMIN_CONFIG||{};
+ if(!("serviceWorker" in navigator)||!("PushManager" in window)||!("Notification" in window)){
+   dashMessage.textContent="This browser does not support background push notifications. Please use current Chrome on Android.";
+   return;
+ }
+ if(!cfg.vapidPublicKey){dashMessage.textContent="Push notification key is not configured.";return;}
+ button.disabled=true;button.textContent="Enabling alerts…";
+ try{
+   const permission=await Notification.requestPermission();
+   if(permission!=="granted") throw new Error("Please allow notifications for HoneyPro Admin in your phone settings.");
+   const registration=await navigator.serviceWorker.register("/sw.js");
+   await navigator.serviceWorker.ready;
+   let subscription=await registration.pushManager.getSubscription();
+   if(!subscription){
+     subscription=await registration.pushManager.subscribe({
+       userVisibleOnly:true,
+       applicationServerKey:urlBase64ToUint8Array(cfg.vapidPublicKey)
+     });
+   }
+   const {data:{session},error}=await client.auth.getSession();
+   if(error||!session?.access_token) throw new Error("Your admin session has expired. Please sign in again.");
+   const response=await fetch("/api/push-subscribe",{
+     method:"POST",
+     headers:{
+       "Content-Type":"application/json",
+       "Authorization":`Bearer ${session.access_token}`,
+       "apikey":cfg.supabasePublishableKey
+     },
+     body:JSON.stringify(subscription)
+   });
+   const result=await response.json().catch(()=>({}));
+   if(!response.ok) throw new Error(result.error||"Could not register this phone for alerts.");
+   button.textContent="Order alerts enabled";
+   dashMessage.textContent="This phone is registered. New orders can now trigger notifications even when the admin app is closed.";
+ }catch(error){
+   dashMessage.textContent=error.message||"Could not enable notifications.";
+   button.textContent="Enable order alerts";
+ }finally{
+   button.disabled=false;
+ }
+}
 async function showDashboard(){
  const {data:{session}}=await client.auth.getSession();
  if(!session)return;
