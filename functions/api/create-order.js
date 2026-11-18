@@ -1,3 +1,5 @@
+import { buildPushPayload } from "@block65/webcrypto-web-push";
+
 const json = (body, status = 200) => new Response(JSON.stringify(body), {
   status,
   headers: {
@@ -136,6 +138,56 @@ export async function onRequest(context) {
       if (!mail.ok) console.error("Email notification failed:", await mail.text());
     } catch (error) {
       console.error("Email notification error:", error.message);
+    }
+  }
+
+  // Send background push alerts to registered admin devices. Push failures never block an order.
+  if (env.VAPID_PUBLIC_KEY && env.VAPID_PRIVATE_KEY && env.VAPID_SUBJECT) {
+    try {
+      const base = env.SUPABASE_URL.replace(/\\/$/, "");
+      const list = await fetch(base + "/rest/v1/honeypro_push_subscriptions?select=id,endpoint,p256dh,auth", {
+        headers: { apikey: supabaseSecret, Authorization: `Bearer ${supabaseSecret}` }
+      });
+      if (list.ok) {
+        const subscriptions = await list.json();
+        const vapid = {
+          subject: env.VAPID_SUBJECT,
+          publicKey: env.VAPID_PUBLIC_KEY,
+          privateKey: env.VAPID_PRIVATE_KEY
+        };
+        await Promise.all((subscriptions || []).map(async sub => {
+          const subscription = {
+            endpoint: sub.endpoint, expirationTime: null,
+            keys: { p256dh: sub.p256dh, auth: sub.auth }
+          };
+          try {
+            const payload = await buildPushPayload({
+              data: JSON.stringify({
+                title: "New HoneyPro order",
+                body: `${order.full_name} · ${order.phone} · ₦${order.total_amount.toLocaleString("en-NG")}`,
+                url: "/admin.html",
+                tag: `honeypro-order-${data.id}`
+              }),
+              options: { ttl: 86400 }
+            }, subscription, vapid);
+            const sent = await fetch(subscription.endpoint, payload);
+            if (sent.status === 404 || sent.status === 410) {
+              await fetch(base + "/rest/v1/honeypro_push_subscriptions?id=eq." + encodeURIComponent(sub.id), {
+                method: "DELETE",
+                headers: { apikey: supabaseSecret, Authorization: `Bearer ${supabaseSecret}` }
+              });
+            } else if (!sent.ok) {
+              console.error("Push delivery returned status:", sent.status);
+            }
+          } catch (error) {
+            console.error("Push delivery failed:", error.message);
+          }
+        }));
+      } else {
+        console.error("Could not load push subscriptions:", await list.text());
+      }
+    } catch (error) {
+      console.error("Push notification error:", error.message);
     }
   }
 
