@@ -144,7 +144,7 @@ export async function onRequest(context) {
   // Send background push alerts to registered admin devices. Push failures never block an order.
   if (env.VAPID_PUBLIC_KEY && env.VAPID_PRIVATE_KEY && env.VAPID_SUBJECT) {
     try {
-      const base = env.SUPABASE_URL.replace(/\\/$/, "");
+      const base = env.SUPABASE_URL.replace(/\/$/, "");
       const list = await fetch(base + "/rest/v1/honeypro_push_subscriptions?select=id,endpoint,p256dh,auth", {
         headers: { apikey: supabaseSecret, Authorization: `Bearer ${supabaseSecret}` }
       });
