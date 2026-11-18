@@ -37,9 +37,16 @@ async function loadOrders(){
  if(error){dashMessage.textContent=error.message;return;}
  const rows=data||[];
  loadedOrders=rows;
+ const statusOf=o=>String(o.status||"new").toLowerCase();
+ const countStatus=status=>rows.filter(o=>statusOf(o)===status).length;
  document.getElementById("count").textContent=rows.length;
- document.getElementById("newCount").textContent=rows.filter(x=>x.status==="new").length;
+ document.getElementById("newCount").textContent=countStatus("new");
+ document.getElementById("confirmedCount").textContent=countStatus("confirmed");
+ document.getElementById("processingCount").textContent=countStatus("processing");
+ document.getElementById("deliveredCount").textContent=countStatus("delivered");
+ document.getElementById("cancelledCount").textContent=countStatus("cancelled");
  document.getElementById("value").textContent=money(rows.reduce((s,x)=>s+Number(x.total_amount||0),0));
+ document.getElementById("deliveredValue").textContent=money(rows.filter(o=>statusOf(o)==="delivered").reduce((s,x)=>s+Number(x.total_amount||0),0));
  const tbody=document.getElementById("orders");tbody.replaceChildren();
 if(!rows.length){tbody.innerHTML='<tr><td colspan="9">No orders yet.</td></tr>';}
  rows.forEach(o=>{
@@ -60,7 +67,7 @@ const cells=[
   statusSelect.className="order-status-select";
   statusSelect.setAttribute("aria-label",`Update status for order ${o.id}`);
   const statusOptions=["new","confirmed","processing","delivered","cancelled"];
-  const currentStatus=String(o.status||"new").toLowerCase();
+  const currentStatus=statusOf(o);
   if(!statusOptions.includes(currentStatus)) statusOptions.unshift(currentStatus);
   statusOptions.forEach(value=>{
     const option=document.createElement("option");
