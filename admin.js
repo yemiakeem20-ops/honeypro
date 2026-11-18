@@ -19,7 +19,7 @@ document.getElementById("loginForm").addEventListener("submit",async e=>{
 logout.addEventListener("click",async()=>{if(notificationTimer)clearInterval(notificationTimer);await client.auth.signOut();dashboard.hidden=true;loginPanel.hidden=false;logout.hidden=true;});
 document.getElementById("refresh").addEventListener("click",()=>loadOrders());
 document.getElementById("exportOrders").addEventListener("click",exportOrdersCsv);
-document.getElementById("enablePushNotifications").addEventListener("click",enablePushNotifications);
+document.getElementById("enablePushNotifications").addEventListener("click",enablePushNotifications);\ndocument.getElementById("testPushNotifications").addEventListener("click",testPushNotifications);
 
 function urlBase64ToUint8Array(value){
  const padding="=".repeat((4-value.length%4)%4);
@@ -70,7 +70,29 @@ async function enablePushNotifications(){
    button.disabled=false;
  }
 }
-async function showDashboard(){
+
+async function testPushNotifications(){
+ const button=document.getElementById("testPushNotifications");
+ const cfg=window.HONEYPRO_ADMIN_CONFIG||{};
+ button.disabled=true;button.textContent="Sending test…";
+ try{
+   const {data:{session},error}=await client.auth.getSession();
+   if(error||!session?.access_token) throw new Error("Your admin session has expired. Please sign in again.");
+   const response=await fetch("/api/test-push",{
+     method:"POST",
+     headers:{"Authorization":`Bearer ${session.access_token}`,"apikey":cfg.supabasePublishableKey}
+   });
+   const result=await response.json().catch(()=>({}));
+   if(!response.ok) throw new Error(result.error||"Push test failed.");
+   const details=(result.results||[]).map(x=>x.ok?`Sent (HTTP ${x.status})`:`Failed (HTTP ${x.status||"—"}): ${x.error||x.detail||"Unknown error"}`).join(" | ");
+   dashMessage.textContent=result.ok?"Push service accepted the test notification. "+details:"Push test failed. "+details;
+   button.textContent=result.ok?"Test sent":"Test failed";
+ }catch(error){
+   dashMessage.textContent=error.message||"Could not run push test.";
+   button.textContent="Test phone notification";
+ }finally{button.disabled=false;}
+}
+\nasync function showDashboard(){
  const {data:{session}}=await client.auth.getSession();
  if(!session)return;
  loginPanel.hidden=true;dashboard.hidden=false;logout.hidden=false;
