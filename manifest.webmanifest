@@ -1,0 +1,15 @@
+{
+  "id": "/",
+  "name": "HoneyPro by Hakme Farms",
+  "short_name": "HoneyPro",
+  "description": "Order pure, undiluted Nigerian honey from HoneyPro.",
+  "start_url": "/?source=installed-app",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fffaf0",
+  "theme_color": "#172b1d",
+  "icons": [
+    { "src": "/honeypro-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
