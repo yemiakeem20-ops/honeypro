@@ -90,14 +90,14 @@ function exportOrdersCsv(){
  ];
  const csvCell=value=>{
   let textValue=value==null?"":String(value);
-  if(/^[=+@\\-\\t\\r]/.test(textValue)) textValue="'"+textValue;
+  if(/^[=+@\- \t\r]/.test(textValue)) textValue="'"+textValue;
   return '"'+textValue.replace(/"/g,'""')+'"';
  };
  const lines=[columns.map(c=>csvCell(c[0])).join(",")];
  loadedOrders.forEach(order=>{
   lines.push(columns.map(c=>csvCell(order[c[1]])).join(","));
  });
- const blob=new Blob(["\\uFEFF"+lines.join("\\r\\n")],{type:"text/csv;charset=utf-8;"});
+ const blob=new Blob(["\uFEFF"+lines.join("\r\n")],{type:"text/csv;charset=utf-8;"});
  const url=URL.createObjectURL(blob);
  const link=document.createElement("a");
  link.href=url;
