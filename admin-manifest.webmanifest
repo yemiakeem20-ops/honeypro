@@ -1,0 +1,15 @@
+{
+  "id": "/admin.html",
+  "name": "HoneyPro Admin Dashboard",
+  "short_name": "HoneyPro Admin",
+  "description": "Private order management dashboard for HoneyPro.",
+  "start_url": "/admin.html?source=admin-installed-app",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#fffaf0",
+  "theme_color": "#172b1d",
+  "icons": [
+    { "src": "/honeypro-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
