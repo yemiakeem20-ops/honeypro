@@ -191,5 +191,59 @@ export async function onRequest(context) {
     }
   }
 
+  // Send a server-side TikTok Events API event after the order is safely saved.
+  // This is an order-placement event, not a payment event (HoneyPro supports pay-on-delivery).
+  if (env.TIKTOK_ACCESS_TOKEN && env.TIKTOK_PIXEL_ID) {
+    try {
+      const eventPayload = {
+        event_source: "web",
+        event_source_id: env.TIKTOK_PIXEL_ID,
+        data: [{
+          event: "PlaceAnOrder",
+          event_time: Math.floor(Date.now() / 1000),
+          event_id: String(data.id),
+          user: {
+            ip: request.headers.get("CF-Connecting-IP") || undefined,
+            user_agent: request.headers.get("User-Agent") || undefined
+          },
+          page: {
+            url: new URL("/", request.url).toString()
+          },
+          properties: {
+            currency: "NGN",
+            value: order.total_amount,
+            order_id: String(data.id),
+            content_type: "product",
+            contents: [{
+              content_id: "HONEYPRO-5L",
+              content_name: "HoneyPro Raw Honey 5L",
+              quantity: quantity,
+              price: unit
+            }]
+          }
+        }]
+      };
+      if (env.TIKTOK_TEST_EVENT_CODE) {
+        eventPayload.test_event_code = env.TIKTOK_TEST_EVENT_CODE;
+      }
+      const tiktokResponse = await fetch("https://business-api.tiktok.com/open_api/v1.3/event/track/", {
+        method: "POST",
+        headers: {
+          "Access-Token": env.TIKTOK_ACCESS_TOKEN,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(eventPayload)
+      });
+      const tiktokResult = await tiktokResponse.json().catch(() => null);
+      if (!tiktokResponse.ok || !tiktokResult || tiktokResult.code !== 0) {
+        console.error("TikTok Events API rejected order event:", tiktokResult || tiktokResponse.status);
+      } else {
+        console.log("TikTok order event accepted:", tiktokResult.request_id || "accepted");
+      }
+    } catch (error) {
+      console.error("TikTok Events API request failed:", error.message);
+    }
+  }
+
   return json({ ok: true, orderId: data.id });
 }
