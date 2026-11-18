@@ -18,7 +18,7 @@
       ttq.methods = [
         "page", "track", "identify", "instances", "debug",
         "on", "off", "once", "ready", "alias", "group",
-        "enableCookie", "disableCookie"
+        "enableCookie", "disableCookie", "holdConsent", "revokeConsent", "grantConsent"
       ];
 
       ttq.setAndDefer = function (queue, method) {
@@ -32,7 +32,7 @@
       }
 
       ttq.instance = function (id) {
-        var instance = ttq._i && ttq._i[id] ? ttq._i[id] : [];
+        var instance = ttq._i && ttq._i[id] ? ttq._i[id] : (ttq._i = ttq._i || {}, ttq._i[id] = []);
         for (var j = 0; j < ttq.methods.length; j++) {
           ttq.setAndDefer(instance, ttq.methods[j]);
         }
