@@ -52,9 +52,39 @@ const cells=[
   money(o.total_amount)
 ];
   cells.forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td);});
-  const status=document.createElement("td");status.innerHTML=`<span class="status"></span>`;status.firstChild.textContent=o.status||"new";tr.appendChild(status);tbody.appendChild(tr);
+  const statusCell=document.createElement("td");
+  const statusSelect=document.createElement("select");
+  statusSelect.className="order-status-select";
+  statusSelect.setAttribute("aria-label",`Update status for order ${o.id}`);
+  const statusOptions=["new","confirmed","processing","delivered","cancelled"];
+  const currentStatus=String(o.status||"new").toLowerCase();
+  if(!statusOptions.includes(currentStatus)) statusOptions.unshift(currentStatus);
+  statusOptions.forEach(value=>{
+    const option=document.createElement("option");
+    option.value=value;
+    option.textContent=value.charAt(0).toUpperCase()+value.slice(1);
+    statusSelect.appendChild(option);
+  });
+  statusSelect.value=currentStatus;
+  statusSelect.addEventListener("change",()=>updateOrderStatus(o.id,statusSelect));
+  statusCell.appendChild(statusSelect);
+  tr.appendChild(statusCell);tbody.appendChild(tr);
  });
  dashMessage.textContent="Showing up to 500 most recent orders. Desktop alerts work while this dashboard is open.";
+}
+async function updateOrderStatus(orderId,select){
+ const nextStatus=select.value;
+ select.disabled=true;
+ dashMessage.textContent="Saving order status…";
+ const {error}=await client.from("honeypro_orders").update({status:nextStatus}).eq("id",orderId);
+ select.disabled=false;
+ if(error){
+   dashMessage.textContent=`Could not update status: ${error.message}. Check the Supabase UPDATE permission.`;
+   await loadOrders();
+   return;
+ }
+ dashMessage.textContent=`Order status updated to ${nextStatus}.`;
+ await loadOrders();
 }
 async function checkForNewOrders(){
  if(!client || !lastNotificationCheck || document.hidden) return;
