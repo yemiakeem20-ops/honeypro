@@ -1,4 +1,4 @@
-const CACHE_NAME = "honeypro-shell-v1";
+const CACHE_NAME = "honeypro-shell-v2";
 const APP_SHELL = [
   "/",
   "/index.html",
