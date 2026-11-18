@@ -19,7 +19,8 @@ document.getElementById("loginForm").addEventListener("submit",async e=>{
 logout.addEventListener("click",async()=>{if(notificationTimer)clearInterval(notificationTimer);await client.auth.signOut();dashboard.hidden=true;loginPanel.hidden=false;logout.hidden=true;});
 document.getElementById("refresh").addEventListener("click",()=>loadOrders());
 document.getElementById("exportOrders").addEventListener("click",exportOrdersCsv);
-document.getElementById("enablePushNotifications").addEventListener("click",enablePushNotifications);\ndocument.getElementById("testPushNotifications").addEventListener("click",testPushNotifications);
+document.getElementById("enablePushNotifications").addEventListener("click",enablePushNotifications);
+document.getElementById("testPushNotifications").addEventListener("click",testPushNotifications);
 
 function urlBase64ToUint8Array(value){
  const padding="=".repeat((4-value.length%4)%4);
@@ -92,7 +93,8 @@ async function testPushNotifications(){
    button.textContent="Test phone notification";
  }finally{button.disabled=false;}
 }
-\nasync function showDashboard(){
+
+async function showDashboard(){
  const {data:{session}}=await client.auth.getSession();
  if(!session)return;
  loginPanel.hidden=true;dashboard.hidden=false;logout.hidden=false;
@@ -174,7 +176,8 @@ function exportOrdersCsv(){
  loadedOrders.forEach(order=>{
   lines.push(columns.map(c=>csvCell(order[c[1]])).join(","));
  });
- const blob=new Blob(["\uFEFF"+lines.join("\r\n")],{type:"text/csv;charset=utf-8;"});
+ const blob=new Blob(["\uFEFF"+lines.join("\r
+")],{type:"text/csv;charset=utf-8;"});
  const url=URL.createObjectURL(blob);
  const link=document.createElement("a");
  link.href=url;
