@@ -119,41 +119,39 @@ async function loadOrders(){
  document.getElementById("cancelledCount").textContent=countStatus("cancelled");
  document.getElementById("value").textContent=money(rows.reduce((s,x)=>s+Number(x.total_amount||0),0));
  document.getElementById("deliveredValue").textContent=money(rows.filter(o=>statusOf(o)==="delivered").reduce((s,x)=>s+Number(x.total_amount||0),0));
- const tbody=document.getElementById("orders");tbody.replaceChildren();
-if(!rows.length){tbody.innerHTML='<tr><td colspan="9">No orders yet.</td></tr>';}
- rows.forEach(o=>{
-  const tr=document.createElement("tr");
-const cells=[
-  new Date(o.created_at).toLocaleString("en-NG"),
-  o.full_name,
-  o.phone,
-  o.whatsapp_number || "Not provided",
-  o.email || "Not provided",
-  `${o.address}, ${o.city}, ${o.state}`,
-  o.quantity,
-  money(o.total_amount)
-];
-  cells.forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td);});
-  const statusCell=document.createElement("td");
-  const statusSelect=document.createElement("select");
-  statusSelect.className="order-status-select";
-  statusSelect.setAttribute("aria-label",`Update status for order ${o.id}`);
-  const statusOptions=["new","confirmed","processing","delivered","cancelled"];
-  const currentStatus=statusOf(o);
-  if(!statusOptions.includes(currentStatus)) statusOptions.unshift(currentStatus);
-  statusOptions.forEach(value=>{
-    const option=document.createElement("option");
-    option.value=value;
-    option.textContent=value.charAt(0).toUpperCase()+value.slice(1);
-    statusSelect.appendChild(option);
-  });
-  statusSelect.value=currentStatus;
-  statusSelect.addEventListener("change",()=>updateOrderStatus(o.id,statusSelect));
-  statusCell.appendChild(statusSelect);
-  tr.appendChild(statusCell);tbody.appendChild(tr);
- });
+ renderOrders();
  dashMessage.textContent="Showing up to 500 most recent orders. Desktop alerts work while this dashboard is open.";
 }
+function renderOrders(){
+ const query=(document.getElementById("orderSearch")?.value||"").trim().toLowerCase();
+ const statusFilter=document.getElementById("statusFilter")?.value||"all";
+ const statusOf=o=>String(o.status||"new").toLowerCase();
+ const rows=loadedOrders.filter(o=>{
+  const searchable=[o.full_name,o.phone,o.whatsapp_number,o.email,o.address,o.city,o.state].join(" ").toLowerCase();
+  return (!query||searchable.includes(query))&&(statusFilter==="all"||statusOf(o)===statusFilter);
+ });
+ const tbody=document.getElementById("orders");tbody.replaceChildren();
+ if(!rows.length){
+  const tr=document.createElement("tr");const td=document.createElement("td");
+  td.colSpan=9;td.textContent=loadedOrders.length?"No matching orders.":"No orders yet.";
+  tr.appendChild(td);tbody.appendChild(tr);return;
+ }
+ rows.forEach(o=>{
+  const tr=document.createElement("tr");
+  const cells=[new Date(o.created_at).toLocaleString("en-NG"),o.full_name,o.phone,o.whatsapp_number||"Not provided",o.email||"Not provided",`${o.address}, ${o.city}, ${o.state}`,o.quantity,money(o.total_amount)];
+  cells.forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td);});
+  const statusCell=document.createElement("td");
+  const statusSelect=document.createElement("select");statusSelect.className="order-status-select";
+  statusSelect.setAttribute("aria-label",`Update status for order ${o.id}`);
+  const statusOptions=["new","confirmed","processing","delivered","cancelled"];
+  const currentStatus=statusOf(o);if(!statusOptions.includes(currentStatus))statusOptions.unshift(currentStatus);
+  statusOptions.forEach(value=>{const option=document.createElement("option");option.value=value;option.textContent=value.charAt(0).toUpperCase()+value.slice(1);statusSelect.appendChild(option);});
+  statusSelect.value=currentStatus;statusSelect.addEventListener("change",()=>updateOrderStatus(o.id,statusSelect));
+  statusCell.appendChild(statusSelect);tr.appendChild(statusCell);tbody.appendChild(tr);
+ });
+}
+document.getElementById("orderSearch").addEventListener("input",renderOrders);
+document.getElementById("statusFilter").addEventListener("change",renderOrders);
 function exportOrdersCsv(){
  if(!loadedOrders.length){
    dashMessage.textContent="There are no orders to export yet.";
